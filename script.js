@@ -56,7 +56,7 @@ function mostrarRelatorios() {
 
     lista.innerHTML = "";
 
-    relatorios.forEach(function (r) {
+    relatorios.forEach(function (r, i) {
 
         lista.innerHTML += `
 
@@ -64,31 +64,42 @@ function mostrarRelatorios() {
 
             <h3>${r.modelo}</h3>
 
-            <p><b>Data:</b> ${r.data}</p>
+            <p><b>● Data:</b> ${r.data}</p>
 
-            <p><b>Linha:</b> ${r.linha}</p>
+            <p><b>● Linha:</b> ${r.linha}</p>
 
-            <p><b>Turno:</b> ${r.turno}</p>
+            <p><b>● Turno:</b> ${r.turno}</p>
 
-            <p><b>Defeito:</b> ${r.defeito}</p>
+            <p><b>● Defeito:</b> ${r.defeito}</p>
 
-            <p><b>Local:</b> ${r.local}</p>
+            <p><b>● Local:</b> ${r.local}</p>
 
-            <p><b>Material:</b> ${r.material}</p>
+            <p><b>● Material:</b> ${r.material}</p>
 
-            <p><b>Fornecedor:</b> ${r.vendor}</p>
+            <p><b>● Fornecedor:</b> ${r.vendor}</p>
 
-            <p><b>Quantidade:</b> ${r.quantidade}</p>
+            <p><b>● Quantidade:</b> ${r.quantidade}</p>
 
-            <p><b>Descrição:</b> ${r.descricao}</p>
+            <p><b>● Descrição:</b> ${r.descricao}</p>
 
-            <p><b>Containment:</b> ${r.containment}</p>
+            <p><b>● Containment Action:</b> ${r.containment}</p>
 
-            <p><b>Corrective:</b> ${r.corrective}</p>
+            <p><b>● Corrective Action:</b> ${r.corrective}</p>
 
-            <p><b>Responsável:</b> ${r.responsavel}</p>
+            <p><b>● Responsável:</b> ${r.responsavel}</p>
 
             ${r.foto ? `<img src="${r.foto}" style="width:100%;margin-top:10px;border-radius:10px;">` : ""}
+
+            <br><br>
+
+            <button onclick="copiarRelatorio(${i})">
+                📋 Copiar
+            </button>
+
+            <button onclick="excluirRelatorio(${i})"
+                style="margin-top:10px;background:#d32f2f;">
+                🗑 Excluir
+            </button>
 
         </div>
 
