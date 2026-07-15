@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Quality Report</title>
+
+<style>
+
+*{
+
+margin:0;
+padding:0;
+box-sizing:border-box;
+
+}
+
+body{
+
+background:#ECEFF1;
+font-family:Arial,Helvetica,sans-serif;
+padding:20px;
+
+}
+
+.container{
+
+max-width:700px;
+margin:auto;
+background:white;
+padding:20px;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,.2);
+
+}
+
+h1{
+
+text-align:center;
+color:#005BAC;
+margin-bottom:25px;
+
+}
+
+h2{
+
+margin-top:30px;
+color:#005BAC;
+
+}
+
+label{
+
+display:block;
+margin-top:15px;
+margin-bottom:5px;
+font-weight:bold;
+
+}
+
+input,
+select,
+textarea{
+
+width:100%;
+padding:12px;
+border:1px solid #CCC;
+border-radius:8px;
+font-size:16px;
+
+}
+
+textarea{
+
+height:120px;
+
+}
+
+button{
+
+margin-top:25px;
+width:100%;
+padding:15px;
+background:#005BAC;
+color:white;
+border:none;
+border-radius:10px;
+font-size:18px;
+
+}
+
+button:hover{
+
+background:#004080;
+
+}
+
+.card{
+
+margin-top:20px;
+padding:15px;
+background:#F7F7F7;
+border-left:6px solid #005BAC;
+border-radius:10px;
+
+}
+
+.card img{
+
+width:100%;
+margin-top:10px;
+border-radius:10px;
+
+}
+
+#preview{
+
+display:none;
+width:100%;
+margin-top:15px;
+border-radius:10px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>QUALITY REPORT</h1>
+
+<label>Data</label>
+
+<input type="date" id="data">
+
+<label>Modelo</label>
+
+<input type="text" id="modelo">
+
+<label>Linha</label>
+
+<input type="text" id="linha">
+
+<label>Turno</label>
+
+<select id="turno">
+
+<option>A</option>
+
+<option>B</option>
+
+<option>C</option>
+
+</select>
+
+<label>Defect Symptom</label>
+
+<input type="text" id="defeito">
+
+<label>Location</label>
+
+<input type="text" id="local">
+
+<label>Material Code</label>
+
+<input type="text" id="material">
+
+<label>Vendor</label>
+
+<input type="text" id="vendor">
+
+<label>Quantidade</label>
+
+<input type="number" id="quantidade">
+
+<label>Descrição</label>
+
+<textarea id="descricao"></textarea>
+
+<label>Containment Action</label>
+
+<textarea id="containment"></textarea>
+
+<label>Corrective Action</label>
+
+<textarea id="corrective"></textarea>
+
+<label>Responsável</label>
+
+<input type="text" id="responsavel">
+
+<label>Foto da Ocorrência</label>
+
+<input
+type="file"
+id="foto"
+accept="image/*"
+capture="environment">
+
+<img id="preview">
+
+<button onclick="salvarRelatorio()">
+
+💾 SALVAR RELATÓRIO
+
+</button>
+
+<hr>
+
+<h2>Histórico</h2>
+
+<div id="lista"></div>
+
+</div>
+
+<script>
+
+let relatorios=[];
+
+const foto=document.getElementById("foto");
+
+foto.addEventListener("change",function(){
+
+const arquivo=this.files[0];
+
+if(!arquivo) return;
+
+const leitor=new FileReader();
+
+leitor.onload=function(e){
+
+document.getElementById("preview").src=e.target.result;
+
+document.getElementById("preview").style.display="block";
+
+}
+
+leitor.readAsDataURL(arquivo);
+
+});
+
+function salvarRelatorio(){
+
+let relatorio={
+
+data:document.getElementById("data").value,
+modelo:document.getElementById("modelo").value,
+linha:document.getElementById("linha").value,
+turno:document.getElementById("turno").value,
+defeito:document.getElementById("defeito").value,
+local:document.getElementById("local").value,
+material:document.getElementById("material").value,
+vendor:document.getElementById("vendor").value,
+quantidade:document.getElementById("quantidade").value,
+descricao:document.getElementById("descricao").value,
+containment:document.getElementById("containment").value,
+corrective:document.getElementById("corrective").value,
+responsavel:document.getElementById("responsavel").value,
+foto:document.getElementById("preview").src
+
+};
+
+relatorios.push(relatorio);
+
+mostrarRelatorios();
+
+limparFormulario();
+
+}
+
+function mostrarRelatorios(){
+
+let lista=document.getElementById("lista");
+
+lista.innerHTML="";
+
+for(let i=0;i<relatorios.length;i++){
+
+let r=relatorios[i];
+
+lista.innerHTML+=`
+
+<div class="card">
+
+<h3>${r.modelo}</h3>
+
+<p><b>📅 Data:</b> ${r.data}</p>
+
+<p><b>🏭 Linha:</b> ${r.linha}</p>
+
+<p><b>🕒 Turno:</b> ${r.turno}</p>
+
+<p><b>⚠️ Defeito:</b> ${r.defeito}</p>
+
+<p><b>📍 Local:</b> ${r.local}</p>
+
+<p><b>🔢 Material:</b> ${r.material}</p>
+
+<p><b>🏢 Fornecedor:</b> ${r.vendor}</p>
+
+<p><b>📦 Quantidade:</b> ${r.quantidade}</p>
+
+<p><b>📝 Descrição:</b></p>
+
+<p>${r.descricao}</p>
+
+<p><b>🛡️ Containment Action:</b></p>
+
+<p>${r.containment}</p>
+
+<p><b>🔧 Corrective Action:</b></p>
+
+<p>${r.corrective}</p>
+
+<p><b>👤 Responsável:</b> ${r.responsavel}</p>
+
+${r.foto ? `<img src="${r.foto}">` : ""}
+
+<br><br>
+
+<button onclick="excluirRelatorio(${i})">
+
+🗑 Excluir
+
+</button>
+
+</div>
+
+`;
+
+}
+
+}
+
+function excluirRelatorio(indice){
+
+relatorios.splice(indice,1);
+
+mostrarRelatorios();
+
+}
+
+function mostrarRelatorios(){
+
+let lista=document.getElementById("lista");
+
+lista.innerHTML="";
+
+for(let i=0;i<relatorios.length;i++){
+
+let r=relatorios[i];
+
+lista.innerHTML+=`
+
+<div class="card">
+
+<h3>${r.modelo}</h3>
+
+<p><b>📅 Data:</b> ${r.data}</p>
+
+<p><b>🏭 Linha:</b> ${r.linha}</p>
+
+<p><b>🕒 Turno:</b> ${r.turno}</p>
+
+<p><b>⚠️ Defeito:</b> ${r.defeito}</p>
+
+<p><b>📍 Local:</b> ${r.local}</p>
+
+<p><b>🔢 Material:</b> ${r.material}</p>
+
+<p><b>🏢 Fornecedor:</b> ${r.vendor}</p>
+
+<p><b>📦 Quantidade:</b> ${r.quantidade}</p>
+
+<p><b>📝 Descrição:</b></p>
+
+<p>${r.descricao}</p>
+
+<p><b>🛡️ Containment Action:</b></p>
+
+<p>${r.containment}</p>
+
+<p><b>🔧 Corrective Action:</b></p>
+
+<p>${r.corrective}</p>
+
+<p><b>👤 Responsável:</b> ${r.responsavel}</p>
+
+${r.foto ? `<img src="${r.foto}">` : ""}
+
+<br><br>
+
+<button onclick="excluirRelatorio(${i})">
+
+🗑 Excluir
+
+</button>
+
+</div>
+
+`;
+
+}
+
+}
+
+function excluirRelatorio(indice){
+
+relatorios.splice(indice,1);
+
+mostrarRelatorios();
+
+}
+
+function limparFormulario(){
+
+document.getElementById("data").value="";
+document.getElementById("modelo").value="";
+document.getElementById("linha").value="";
+document.getElementById("turno").value="A";
+document.getElementById("defeito").value="";
+document.getElementById("local").value="";
+document.getElementById("material").value="";
+document.getElementById("vendor").value="";
+document.getElementById("quantidade").value="";
+document.getElementById("descricao").value="";
+document.getElementById("containment").value="";
+document.getElementById("corrective").value="";
+document.getElementById("responsavel").value="";
+document.getElementById("foto").value="";
+document.getElementById("preview").src="";
+document.getElementById("preview").style.display="none";
+
+}
+
+/* ======== SALVAR NO CELULAR ======== */
+
+function salvarLocal(){
+
+localStorage.setItem("qualityReports",JSON.stringify(relatorios));
+
+}
+
+function carregarLocal(){
+
+let dados=localStorage.getItem("qualityReports");
+
+if(dados){
+
+relatorios=JSON.parse(dados);
+
+mostrarRelatorios();
+
+}
+
+}
+
+/* Atualiza o armazenamento sempre que mostrar a lista */
+
+const mostrarOriginal=mostrarRelatorios;
+
+mostrarRelatorios=function(){
+
+mostrarOriginal();
+
+salvarLocal();
+
+}
+
+carregarLocal();
+
+</script>
+
+</body>
+
+</html>
