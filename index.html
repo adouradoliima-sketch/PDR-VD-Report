@@ -4,7 +4,6 @@
 <head>
 
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Quality Report</title>
@@ -12,118 +11,94 @@
 <style>
 
 *{
-
 margin:0;
 padding:0;
 box-sizing:border-box;
-
 }
 
 body{
-
 background:#ECEFF1;
 font-family:Arial,Helvetica,sans-serif;
 padding:20px;
-
 }
 
 .container{
-
 max-width:700px;
 margin:auto;
-background:white;
+background:#FFFFFF;
 padding:20px;
 border-radius:15px;
 box-shadow:0 5px 15px rgba(0,0,0,.2);
-
 }
 
 h1{
-
 text-align:center;
 color:#005BAC;
 margin-bottom:25px;
-
 }
 
 h2{
-
 margin-top:30px;
 color:#005BAC;
-
 }
 
 label{
-
 display:block;
 margin-top:15px;
 margin-bottom:5px;
 font-weight:bold;
-
 }
 
 input,
 select,
 textarea{
-
 width:100%;
 padding:12px;
 border:1px solid #CCC;
 border-radius:8px;
 font-size:16px;
-
 }
 
 textarea{
-
-height:120px;
-
+height:110px;
+resize:none;
 }
 
 button{
-
-margin-top:25px;
+margin-top:20px;
 width:100%;
 padding:15px;
 background:#005BAC;
 color:white;
 border:none;
 border-radius:10px;
-font-size:18px;
-
+font-size:17px;
+cursor:pointer;
 }
 
 button:hover{
-
 background:#004080;
-
 }
 
 .card{
-
 margin-top:20px;
 padding:15px;
 background:#F7F7F7;
 border-left:6px solid #005BAC;
 border-radius:10px;
-
 }
 
 .card img{
-
 width:100%;
 margin-top:10px;
 border-radius:10px;
-
 }
 
 #preview{
-
 display:none;
 width:100%;
 margin-top:15px;
 border-radius:10px;
-
 }
 
 </style>
@@ -137,68 +112,65 @@ border-radius:10px;
 <h1>QUALITY REPORT</h1>
 
 <label>Data</label>
-
 <input type="date" id="data">
 
 <label>Processo</label>
+<select id="processo">
+
+<option value="">Selecione</option>
 
 <option>LCM</option>
+
 <option>MAIN LINE</option>
 
 </select>
 
 <label>Modelo</label>
 
+<select id="modelo">
+
+<option value="">Selecione</option>
+
 <option>UN50U8000GXZD</option>
+
 <option>UN50M75HA</option>
+
 <option>UN55M75HA</option>
+
 <option>UN65M75HA</option>
 
-
 </select>
-
-<input type="text" id="modelo">
-
-<label>Linha</label>
 
 <label>Linha</label>
 
 <select id="linha">
 
-    <option value="">Selecione</option>
+<option value="">Selecione</option>
 
-<label>Linha</label>
+<optgroup label="VM">
 
-<select id="linha">
+<option>VM01</option>
+<option>VM02</option>
+<option>VM03</option>
+<option>VM04</option>
+<option>VM05</option>
+<option>VM06</option>
+<option>VM07</option>
 
-    <option value="">Selecione a Linha</option>
+</optgroup>
 
-    <optgroup label="VM">
+<optgroup label="VL">
 
-        <option>VM01</option>
-        <option>VM02</option>
-        <option>VM03</option>
-        <option>VM04</option>
-        <option>VM05</option>
-        <option>VM06</option>
-        <option>VM07</option>
+<option>VL01</option>
+<option>VL02</option>
+<option>VL03</option>
+<option>VL04</option>
+<option>VL05</option>
+<option>VL06</option>
 
-    </optgroup>
-
-    <optgroup label="VL">
-
-        <option>VL01</option>
-        <option>VL02</option>
-        <option>VL03</option>
-        <option>VL04</option>
-        <option>VL05</option>
-        <option>VL06</option>
-
-    </optgroup>
+</optgroup>
 
 </select>
-
-<input type="text" id="linha">
 
 <label>Turno</label>
 
@@ -238,6 +210,10 @@ border-radius:10px;
 
 <textarea id="containment"></textarea>
 
+<label>Corrective Action</label>
+
+<textarea id="corrective"></textarea>
+
 <label>Responsável</label>
 
 <input type="text" id="responsavel">
@@ -268,27 +244,27 @@ capture="environment">
 
 <script>
 
-let relatorios=[];
+let relatorios = [];
 
-const foto=document.getElementById("foto");
+const foto = document.getElementById("foto");
 
-foto.addEventListener("change",function(){
+foto.addEventListener("change", function(){
 
-const arquivo=this.files[0];
+    const arquivo = this.files[0];
 
-if(!arquivo) return;
+    if(!arquivo) return;
 
-const leitor=new FileReader();
+    const leitor = new FileReader();
 
-leitor.onload=function(e){
+    leitor.onload = function(e){
 
-document.getElementById("preview").src=e.target.result;
+        document.getElementById("preview").src = e.target.result;
 
-document.getElementById("preview").style.display="block";
+        document.getElementById("preview").style.display = "block";
 
-}
+    }
 
-leitor.readAsDataURL(arquivo);
+    leitor.readAsDataURL(arquivo);
 
 });
 
@@ -297,6 +273,7 @@ function salvarRelatorio(){
 let relatorio={
 
 data:document.getElementById("data").value,
+processo:document.getElementById("processo").value,
 modelo:document.getElementById("modelo").value,
 linha:document.getElementById("linha").value,
 turno:document.getElementById("turno").value,
@@ -327,9 +304,7 @@ let lista=document.getElementById("lista");
 
 lista.innerHTML="";
 
-for(let i=0;i<relatorios.length;i++){
-
-let r=relatorios[i];
+relatorios.forEach(function(r,i){
 
 lista.innerHTML+=`
 
@@ -337,41 +312,43 @@ lista.innerHTML+=`
 
 <h3>${r.modelo}</h3>
 
-<p><b>📅 Data:</b> ${r.data}</p>
+<p><b>● Processo:</b> ${r.processo}</p>
 
-<p><b>🏭 Linha:</b> ${r.linha}</p>
+<p><b>● Data:</b> ${r.data}</p>
 
-<p><b>🕒 Turno:</b> ${r.turno}</p>
+<p><b>● Linha:</b> ${r.linha}</p>
 
-<p><b>⚠️ Defeito:</b> ${r.defeito}</p>
+<p><b>● Turno:</b> ${r.turno}</p>
 
-<p><b>📍 Local:</b> ${r.local}</p>
+<p><b>● Defect Symptom:</b> ${r.defeito}</p>
 
-<p><b>🔢 Material:</b> ${r.material}</p>
+<p><b>● Location:</b> ${r.local}</p>
 
-<p><b>🏢 Fornecedor:</b> ${r.vendor}</p>
+<p><b>● Material Code:</b> ${r.material}</p>
 
-<p><b>📦 Quantidade:</b> ${r.quantidade}</p>
+<p><b>● Vendor:</b> ${r.vendor}</p>
 
-<p><b>📝 Descrição:</b></p>
+<p><b>● Quantity:</b> ${r.quantidade}</p>
 
-<p>${r.descricao}</p>
+<p><b>● Description:</b><br>${r.descricao}</p>
 
-<p><b>🛡️ Containment Action:</b></p>
+<p><b>● Containment Action:</b><br>${r.containment}</p>
 
-<p>${r.containment}</p>
+<p><b>● Corrective Action:</b><br>${r.corrective}</p>
 
-<p><b>🔧 Corrective Action:</b></p>
-
-<p>${r.corrective}</p>
-
-<p><b>👤 Responsável:</b> ${r.responsavel}</p>
+<p><b>● Responsible:</b> ${r.responsavel}</p>
 
 ${r.foto ? `<img src="${r.foto}">` : ""}
 
 <br><br>
 
-<button onclick="excluirRelatorio(${i})">
+<button onclick="copiarRelatorio(${i})">
+
+📋 Copiar
+
+</button>
+
+<button onclick="excluirRelatorio(${i})" style="background:#D32F2F;margin-top:10px;">
 
 🗑 Excluir
 
@@ -381,96 +358,78 @@ ${r.foto ? `<img src="${r.foto}">` : ""}
 
 `;
 
+});
+
+salvarLocal();
+
 }
+
+function copiarRelatorio(indice){
+
+let r = relatorios[indice];
+
+let texto =
+
+`QUALITY REPORT
+
+Process: ${r.processo}
+Model: ${r.modelo}
+Date: ${r.data}
+Line: ${r.linha}
+Shift: ${r.turno}
+
+Defect Symptom:
+${r.defeito}
+
+Location:
+${r.local}
+
+Material Code:
+${r.material}
+
+Vendor:
+${r.vendor}
+
+Quantity:
+${r.quantidade}
+
+Description:
+${r.descricao}
+
+Containment Action:
+${r.containment}
+
+Corrective Action:
+${r.corrective}
+
+Responsible:
+${r.responsavel}`;
+
+navigator.clipboard.writeText(texto);
+
+alert("Relatório copiado com sucesso!");
 
 }
 
 function excluirRelatorio(indice){
+
+if(confirm("Deseja excluir este relatório?")){
 
 relatorios.splice(indice,1);
 
 mostrarRelatorios();
 
 }
-
-function mostrarRelatorios(){
-
-let lista=document.getElementById("lista");
-
-lista.innerHTML="";
-
-for(let i=0;i<relatorios.length;i++){
-
-let r=relatorios[i];
-
-lista.innerHTML+=`
-
-<div class="card">
-
-<h3>${r.modelo}</h3>
-
-<p><b>📅 Data:</b> ${r.data}</p>
-
-<p><b>🏭 Linha:</b> ${r.linha}</p>
-
-<p><b>🕒 Turno:</b> ${r.turno}</p>
-
-<p><b>⚠️ Defeito:</b> ${r.defeito}</p>
-
-<p><b>📍 Local:</b> ${r.local}</p>
-
-<p><b>🔢 Material:</b> ${r.material}</p>
-
-<p><b>🏢 Fornecedor:</b> ${r.vendor}</p>
-
-<p><b>📦 Quantidade:</b> ${r.quantidade}</p>
-
-<p><b>📝 Descrição:</b></p>
-
-<p>${r.descricao}</p>
-
-<p><b>🛡️ Containment Action:</b></p>
-
-<p>${r.containment}</p>
-
-<p><b>🔧 Corrective Action:</b></p>
-
-<p>${r.corrective}</p>
-
-<p><b>👤 Responsável:</b> ${r.responsavel}</p>
-
-${r.foto ? `<img src="${r.foto}">` : ""}
-
-<br><br>
-
-<button onclick="excluirRelatorio(${i})">
-
-🗑 Excluir
-
-</button>
-
-</div>
-
-`;
-
-}
-
-}
-
-function excluirRelatorio(indice){
-
-relatorios.splice(indice,1);
-
-mostrarRelatorios();
 
 }
 
 function limparFormulario(){
 
 document.getElementById("data").value="";
+document.getElementById("processo").value="";
 document.getElementById("modelo").value="";
 document.getElementById("linha").value="";
-document.getElementById("turno").value="A";
+document.getElementById("turno").value="1º";
 document.getElementById("defeito").value="";
 document.getElementById("local").value="";
 document.getElementById("material").value="";
@@ -485,8 +444,6 @@ document.getElementById("preview").src="";
 document.getElementById("preview").style.display="none";
 
 }
-
-/* ======== SALVAR NO CELULAR ======== */
 
 function salvarLocal(){
 
@@ -508,18 +465,6 @@ mostrarRelatorios();
 
 }
 
-/* Atualiza o armazenamento sempre que mostrar a lista */
-
-const mostrarOriginal=mostrarRelatorios;
-
-mostrarRelatorios=function(){
-
-mostrarOriginal();
-
-salvarLocal();
-
-}
-
 carregarLocal();
 
 </script>
@@ -527,3 +472,4 @@ carregarLocal();
 </body>
 
 </html>
+
